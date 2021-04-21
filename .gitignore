@@ -1,0 +1,19 @@
+# OSX
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# VSC
+
+*.sdf
+*.opensdf
+*.suo
+ipch/
+
+# npm
+node_modules
+
+#local dotenv
+.env.local
+.env.*.local
