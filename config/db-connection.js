@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const util = require('util');
 
 require('dotenv').config();
 
@@ -13,5 +14,8 @@ const connection = mysql.createConnection({
 connection.connect((err) => {
     if (err) throw err;
 });
+
+// using util.promisify to turn connection.query into promise returning function
+connection.query = util.promisify(connection.query)
 
 modual.exports = connection;
