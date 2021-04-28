@@ -49,7 +49,7 @@ const init = async () => {
                 addDept();
                 break
             case 'Remove employee':
-                emoveEmp();
+                removeEmp();
                 break
             case 'Remove role':
                 removeRole();
@@ -117,7 +117,7 @@ const addEmp  = async () => {
         },
     ]);
     await query.createEmp(newEmp);
-    console.log(`\nPlease welcome ${newEmp.first_name} ${newEmp.last_name}, our newest hire!\n` )
+    console.log(`\nThe new employee ${newEmp.first_name} ${newEmp.last_name}has been added to the database.\n` )
     hasManager();
 }
 
@@ -146,7 +146,7 @@ const addRole  = async () => {
         },
     ]);
     await query.createRole(newRole);
-    console.log(`\nA new role ${newRole.title} of the ${newRole.deparment_id} department added!\n` )
+    console.log(`\nA new role ${newRole.title} of the ${newRole.deparment_id} department added.\n` )
     returnInit();
 }
 
@@ -159,7 +159,7 @@ const addDept  = async () => {
         }
     ]);
     await query.createDept(newDept);
-    console.log(`\nA new ${newDept.dept_name} department added!\n` )
+    console.log(`\nA new ${newDept.dept_name} department added.\n` )
     returnInit();
 }
 
@@ -300,14 +300,85 @@ const updateManager = async () => {
     )
 }
 
-// connect and run init()
+// >>>> FUNCTIONS TO REMOVE <<<<
+
+const removeEmp  = async () => {
+    const employee = await query.showFullName();
+    const employeeChoices = employee.map(({full_name, id}) => ({
+        name: full_name,
+        value: id
+    }))
+    const oldEmp = await inquirer.prompt([
+        {
+            name: 'id',
+            type: 'list',
+            message: 'Which employee needs to be removed?',
+            choices: employeeChoices
+        }
+    ]);
+    await query.deleteEmp(oldEmp);
+    console.log(`\nEmployee removed from database.\n` )
+    returnInit();
+}
+
+const removeRole  = async () => {
+    const role = await query.showRole();
+    const roleChoices = role.map(({title, id}) => ({
+        name: title,
+        value: id
+    }))
+    const oldRole = await inquirer.prompt([
+        {
+            name: 'id',
+            type: 'list',
+            message: 'Which role needs to be removed?',
+            choices: roleChoices
+        }
+    ]);
+    await query.deleteRole(oldRole);
+
+    console.log(`\nRole removed from database.\n` )
+    returnInit();
+}
+
+const removeDept  = async () => {
+    const department = await query.showDept();
+    const departmentChoices = department.map(({dept_name, id}) => ({
+        name: dept_name,
+        value: id
+    }))
+    const oldDept = await inquirer.prompt([
+        {
+            name: 'id',
+            type: 'list',
+            message: 'Which department needs to be removed?',
+            choices: departmentChoices
+        }
+    ]);
+    await query.deleteDept(oldDept);
+
+    console.log(`\nDepartment removed from database.\n` )
+    returnInit();
+}
+
+
+// >>>> CONNECT TO DB AND RUN init() TO START APP <<<<
 connection.connect((err) => {
     if (err) throw err;
-    console.log(`connected as id ${connection.threadId}`);
-    init();
+    console.log('  •˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•  ')
+    console.log('                                                                                                                                                             ')
+    console.log('    ####### ##        ## #######  ##      ####### ##    ## ####### #######      #######       #    ########     #     ######      #      ####### #######     ')
+    console.log('    ###     ####    #### ##    ## ##      ##   ##  ##  ##  ###     ###          ##    ##     ###      ##       ###    ##    #    ###    ##       ##          ')
+    console.log('    #####   ## ##  ## ## #######  ##      ##   ##   ####   #####   #####        ##     ##   ## ##     ##      ## ##   ######    ## ##    #####   #####       ')
+    console.log('    ##      ##  ####  ## ##       ##      ##   ##    ##    ###     ###          ##    ##   #######    ##     #######  ##    #  #######        ## ##          ')
+    console.log('    ####### ##   ##   ## ##       ####### #######    ##    ####### #######      #######   ##     ##   ##    ##     ## ######  ##     ## #######  #######     ')
+    console.log('                                                                                                                                                             ')
+    console.log('  •˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•  \n')
+    setTimeout(init, 1000);
 });
 
-// returning to prompt function
+// >>>> FUNCTION TO RETURN TO PROMPT <<<<
+
 const returnInit = async () => {
     await inquirer.prompt ({
         name: 'return',
