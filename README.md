@@ -65,6 +65,9 @@ The following lists all functions within this project:
 3. Type `git clone` and paste copied respository
 4. Directory should include the following:
 ![Directory Structure:](./assets/images/dir-struc.png)
+5. ***IMPORTANT*** >>>
+    - rename `.env.EXAMPLE` to `.env`
+    - change "//YOUR SQL PASSWORD HERE//" to your own sql password
 
 ## Usage
 
