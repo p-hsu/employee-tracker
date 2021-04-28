@@ -1,9 +1,8 @@
-# Employee Tracker
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-****
+# Employee Tracker  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Project overview
+
+![Employee Database](./assets/images/app-banner.png)
 
 This application allows the ability to view, manage, and make modifications to staffing structure for organizations/businesses, otherwise known as C.M.S - Content Management Systems. Using the command line, users can choose options through prompts to manipulate a databse.
 
@@ -12,8 +11,13 @@ This application allows the ability to view, manage, and make modifications to s
 This project is completed and functional.
 
 #### Issues to debug:
-* `connection.end`: currently not ending > an issue with async and completing a promise
-* `updateManager`: inquirer prompts work and will run through BUT won't actualy update the database > need to inspect query
+* providing a "Quit" option but application doesn't actually exit?
+* `updateManager`: pulled employees that are managers to provide user options BUT
+    - picking one option sends back an ERROR message
+    - picking the other option will follow through with the function but manager will fill in as NULL in database
+    - **THIS WAS A BONUS FUNCTION FOR THE ASSIGNMENT**
+
+:: ALL ISSUES RESOLVED ::
 
 ****
 
@@ -38,9 +42,12 @@ The following components are used to build the code for this project:
 The following lists all functions within this project:
 
 * VIEW all three database tables: "employee", "roles", "department"
+    - **BONUS** user can view employees by manager
+    - **BONUS** user can see total budget of each department
+* UPDATE "employee" database table
+    - **BONUS** user can update BOTH role and *manager*
 * ADD to all three database tables
-* UPDATE "employee" database table via **role** and **manager**
-* DELETE from all three database tables
+* **BONUS** DELETE from all three database tables
 
 ### Process:
 * directory structure created: please see [Installation](#Installation) section

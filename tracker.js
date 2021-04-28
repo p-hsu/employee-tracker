@@ -12,85 +12,138 @@ const init = async () => {
         type: 'list',
         message: 'What would you like to do?',
         choices: [
-            'View by employees',
-            'View by roles',
-            'View by departments',
-            'Update employee',
-            'Add new employee',
-            'Add new role',
-            'Add new department',
-            'Remove employee',
-            'Remove role',
-            'Remove department',
+            'View databases',
+            'Add to database',
+            'Remove from database',
+            'Update employee database',
             'Quit'
         ],
     })
     .then ((todo) => {
         switch (todo.choice) {
-            case 'View by employees':
-                viewEmp();
+            case 'View databases':
+                viewDb();
                 break;
-            case 'View by roles':
-                viewRoles();
+            case 'Add to database':
+                addDb();
                 break;
-            case 'View by departments':
-                viewDept();
+            case 'Remove from database':
+                removeDb();
                 break;
-            case 'Update employee':
+            case 'Update employee database':
                 updateEmp();
                 break;
-            case 'Add new employee':
-                addEmp();
-                break;
-            case 'Add new role':
-                addRole();
-                break
-            case 'Add new department':
-                addDept();
-                break
-            case 'Remove employee':
-                removeEmp();
-                break
-            case 'Remove role':
-                removeRole();
-                break
-            case 'Remove department':
-                removeDept();
-                break
             case 'Quit':
-                exitApp();
+                console.log(`\nDisconnecting from database...\n`)
+                connection.end
+                console.log('...press control C to exit the app, goodbye!\n')
         }
     });
 };
 
+// >>>> VIEW DATABASE <<<<
 
-// >>>> FUNCTIONS TO VIEW <<<<
+const viewDb = async () => {
+    await inquirer.prompt ({
+        name: 'choice',
+        type: 'list',
+        message: 'What would you like to do?',
+        choices: [
+            'View employee database',
+            'View roles database',
+            'View departments database',
+            'View employees by manager',
+            'Main menu'
+        ],
+    })
+    .then ((todo) => {
+        switch (todo.choice) {
+            case 'View employee database':
+                viewEmp();
+                break;
+            case 'View roles database':
+                viewRoles();
+                break;
+            case 'View departments database':
+                viewDept();
+                break;
+            case 'View employees by manager':
+                viewByManager();
+                break;
+            case 'Main menu':
+                returnMain();
+                break;
+        }
+    });
+};
 
 const viewEmp = async () => {
     const empTable = await query.showEmp();
 
+    console.log(`\n\n`)
     console.table(empTable);
-    console.log(`\n=============================\n`)
-    returnInit();
+    console.log(`\n========================= >>>\n`)
+    returnView();
 }
 
 const viewRoles = async () => {
     const roleTable = await query.showRole();
 
+    console.log(`\n\n`)
     console.table(roleTable);
-    console.log(`\n=============================\n`)
-    returnInit();
+    console.log(`\n========================= >>>\n`)
+    returnView();
 }
 
 const viewDept = async () => {
     const deptTable = await query.showDept();
 
+    console.log(`\n\n`)
     console.table(deptTable);
-    console.log(`\n=============================\n`)
-    returnInit();
+    console.log(`\n========================= >>>\n`)
+    returnView();
 }
 
-// >>>> FUNCTIONS TO ADD <<<<
+const viewByManager = async () => {
+    const managerTable = await query.showByManager();
+
+    console.log(`\n\n`)
+    console.table(managerTable);
+    console.log(`\n========================= >>>\n`)
+    returnView();
+}
+
+// >>>> ADD TO DATABASE <<<<
+
+const addDb = async () => {
+    await inquirer.prompt ({
+        name: 'choice',
+        type: 'list',
+        message: 'What would you like to do?',
+        choices: [
+            'Add to employee database',
+            'Add to role database',
+            'Add to department database',
+            'Main menu'
+        ],
+    })
+    .then ((todo) => {
+        switch (todo.choice) {
+            case 'Add to employee database':
+                addEmp();
+                break;
+            case 'Add to role database':
+                addRole();
+                break;
+            case 'Add to department database':
+                addDept();
+                break;
+            case 'Main menu':
+                returnMain();
+                break;
+        }
+    });
+};
 
 const addEmp  = async () => {
     const roles = await query.showRole();
@@ -118,6 +171,10 @@ const addEmp  = async () => {
     ]);
     await query.createEmp(newEmp);
     console.log(`\nThe new employee ${newEmp.first_name} ${newEmp.last_name}has been added to the database.\n` )
+    const empTable = await query.showEmp();
+
+    console.table(empTable);
+    console.log(`\n========================= >>>\n`)
     hasManager();
 }
 
@@ -146,8 +203,12 @@ const addRole  = async () => {
         },
     ]);
     await query.createRole(newRole);
-    console.log(`\nA new role ${newRole.title} of the ${newRole.deparment_id} department added.\n` )
-    returnInit();
+    console.log(`\nA new role ${newRole.title} added to database.\n` )
+    const roleTable = await query.showRole();
+
+    console.table(roleTable);
+    console.log(`\n========================= >>>\n`)
+    returnAdd();
 }
 
 const addDept  = async () => {
@@ -159,8 +220,12 @@ const addDept  = async () => {
         }
     ]);
     await query.createDept(newDept);
-    console.log(`\nA new ${newDept.dept_name} department added.\n` )
-    returnInit();
+    console.log(`\nA new ${newDept.dept_name} department added to database.\n` )
+    const deptTable = await query.showDept();
+
+    console.table(deptTable);
+    console.log(`\n========================= >>>\n`)
+    returnAdd();
 }
 
 // >>>> FUNCTION FOR MANAGER <<<<
@@ -176,8 +241,7 @@ const hasManager = async () => {
         if (confirm.has_manager === true) {
             updateManager();
         } else {
-            console.log(`\nExiting application...goodbye!\n`)
-            connection.end
+            returnAdd();
         };
     });
 }
@@ -192,7 +256,7 @@ const updateEmp = async () => {
         choices: [
             'Update employee role',
             'Update employee manager',
-            'Oops, take me back to prompts!',
+            'Main menu',
         ],
     })
     .then ((choice) => {
@@ -203,9 +267,8 @@ const updateEmp = async () => {
             case 'Update employee manager':
                 updateManager();
                 break;
-            case 'Oops, take me back to prompts!':
-                console.log(`\nPrompts will show shortly...\n`)
-                setTimeout(init, 1000);
+            case 'Main menu':
+                returnMain();
                 break;
         }
     });
@@ -251,7 +314,7 @@ const updateRole = async () => {
         (err, res) => {
           if (err) throw err;
           console.log(`\nThis employee is now updated to a new role!}\n` )
-          returnInit();
+          returnMain();
         }
     )
 }
@@ -263,11 +326,6 @@ const updateManager = async () => {
         value: id
     }))
 
-    const manager = await query.showOnlyManagers();
-    const managerChoices = manager.map(({manager, manager_id}) => ({
-        name: manager,
-        value: manager_id,
-    }))
     const changeManager = await inquirer.prompt([
         {
             name: 'employee_id',
@@ -278,12 +336,12 @@ const updateManager = async () => {
         {
             name: 'manager_id',
             type: 'list',
-            message: 'Who does this employee report to?',
-            choices: managerChoices
+            message: 'To whom does this employee report to?',
+            choices: employeeChoices
         }
     ]);
     await connection.query(
-        'UPDATE employee SET manager_id = ? WHERE ?',
+        'UPDATE employee SET ? WHERE ?',
         [
           {
             manager_id: changeManager.manager_id,
@@ -294,13 +352,43 @@ const updateManager = async () => {
         ],
         (err, res) => {
           if (err) throw err;
-          console.log(`\nThis employee is now updated with a new Manager!}\n` )
-          returnInit();
+          console.log(`\nThis employee is now updated with a new Manager!\n` )
+          returnMain();
         }
     )
 }
 
-// >>>> FUNCTIONS TO REMOVE <<<<
+// >>>> REMOVE FROM DATABASE <<<<
+
+const removeDb = async () => {
+    await inquirer.prompt ({
+        name: 'choice',
+        type: 'list',
+        message: 'What would you like to do?',
+        choices: [
+            'Remove from employee database',
+            'Remove from roles database',
+            'Remove from departments database',
+            'Main menu'
+        ],
+    })
+    .then ((todo) => {
+        switch (todo.choice) {
+            case 'Remove from employee database':
+                removeEmp();
+                break;
+            case 'Remove from roles database':
+                removeRole();
+                break;
+            case 'Remove from departments database':
+                removeDept();
+                break;
+            case 'Main menu':
+                returnMain();
+                break;
+        }
+    });
+};
 
 const removeEmp  = async () => {
     const employee = await query.showFullName();
@@ -318,7 +406,11 @@ const removeEmp  = async () => {
     ]);
     await query.deleteEmp(oldEmp);
     console.log(`\nEmployee removed from database.\n` )
-    returnInit();
+    const empTable = await query.showEmp();
+
+    console.table(empTable);
+    console.log(`\n=============================\n`)
+    returnRemove();
 }
 
 const removeRole  = async () => {
@@ -338,7 +430,7 @@ const removeRole  = async () => {
     await query.deleteRole(oldRole);
 
     console.log(`\nRole removed from database.\n` )
-    returnInit();
+    returnRemove();
 }
 
 const removeDept  = async () => {
@@ -358,7 +450,11 @@ const removeDept  = async () => {
     await query.deleteDept(oldDept);
 
     console.log(`\nDepartment removed from database.\n` )
-    returnInit();
+    const deptTable = await query.showDept();
+
+    console.table(deptTable);
+    console.log(`\n=============================\n`)
+    returnRemove();
 }
 
 
@@ -374,25 +470,83 @@ connection.connect((err) => {
     console.log('    ####### ##   ##   ## ##       ####### #######    ##    ####### #######      #######   ##     ##   ##    ##     ## ######  ##     ## #######  #######     ')
     console.log('                                                                                                                                                             ')
     console.log('  •˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•˚•  \n')
-    setTimeout(init, 1000);
+    setTimeout(init, 800);
 });
 
-// >>>> FUNCTION TO RETURN TO PROMPT <<<<
+// >>>> RETURN VS EXIT <<<<
 
-const returnInit = async () => {
+const returnMain = async () => {
     await inquirer.prompt ({
         name: 'return',
         type: 'confirm',
-        message: 'Do you want to return to prompts?',
+        message: 'Confirm "y" to go back to MAIN menu, otherwise application will exit.',
         when: (answer) => answer
     })
     .then ((confirm) => {
         if (confirm.return === true) {
-            console.log(`\nPrompts will show shortly...\n`)
-            setTimeout(init, 1000);
+            console.log(`\nReturning to MAIN menu...\n`)
+            setTimeout(init, 800);
         } else {
-            console.log(`\nExiting application...goodbye!\n`)
+            console.log(`\nDisconnecting from database...\n`)
             connection.end
+            console.log(`...press control C to exit the app, goodbye!\n`)
+        };
+    });
+}
+
+const returnView = async () => {
+    await inquirer.prompt ({
+        name: 'return',
+        type: 'confirm',
+        message: 'Confirm "y" to go back to VIEW menu, otherwise application will exit.',
+        when: (answer) => answer
+    })
+    .then ((confirm) => {
+        if (confirm.return === true) {
+            console.log(`\nReturning to VIEW menu...\n`)
+            setTimeout(viewDb, 800);
+        } else {
+            console.log(`\nDisconnecting from database...\n`)
+            connection.end
+            console.log(`...press control C to exit the app, goodbye!\n`)
+        };
+    });
+}
+
+const returnAdd = async () => {
+    await inquirer.prompt ({
+        name: 'return',
+        type: 'confirm',
+        message: 'Confirm "y" to go back to ADD menu, otherwise application will exit.',
+        when: (answer) => answer
+    })
+    .then ((confirm) => {
+        if (confirm.return === true) {
+            console.log(`\nReturning to ADD menu...\n`)
+            setTimeout(addDb, 800);
+        } else {
+            console.log(`\nDisconnecting from database...\n`)
+            connection.end
+            console.log(`...press control C to exit the app, goodbye!\n`)
+        };
+    });
+}
+
+const returnRemove = async () => {
+    await inquirer.prompt ({
+        name: 'return',
+        type: 'confirm',
+        message: 'Confirm "y" to go back to REMOVE menu, otherwise application will exit.',
+        when: (answer) => answer
+    })
+    .then ((confirm) => {
+        if (confirm.return === true) {
+            console.log(`\nReturning to REMOVE menu...\n`)
+            setTimeout(removeDb, 800);
+        } else {
+            console.log(`\nDisconnecting from database...\n`)
+            connection.end
+            console.log(`...press control C to exit the app, goodbye!\n`)
         };
     });
 }
