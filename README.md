@@ -67,9 +67,9 @@ The following lists all functions within this project:
 
 ![Directory Structure:](./assets/images/directory-structure.png)
 
-***5. IMPORTANT >>>
+5. ***IMPORTANT >>>***
     - rename `.env.EXAMPLE` to `.env`
-    - change "//YOUR SQL PASSWORD HERE//" to your own sql password***
+    - change "//YOUR SQL PASSWORD HERE//" to your own sql password
 
 ## Usage
 
@@ -81,6 +81,7 @@ SECOND >> `npm start`
 
 ## Walkthrough Video
 
+Please use [**THIS LINK**](https://drive.google.com/file/d/1S4Fz214OUmQc-UURzNudbypd6aBnjPbr/view?usp=sharing) to access a walkthrough video of the application.
 
 
 ****
