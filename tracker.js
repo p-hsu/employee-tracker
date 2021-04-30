@@ -409,7 +409,7 @@ const removeEmp  = async () => {
     const empTable = await query.showEmp();
 
     console.table(empTable);
-    console.log(`\n=============================\n`)
+    console.log(`\n========================= >>>\n`)
     returnRemove();
 }
 
@@ -430,6 +430,8 @@ const removeRole  = async () => {
     await query.deleteRole(oldRole);
 
     console.log(`\nRole removed from database.\n` )
+    const roleTable = await query.showRole();
+    console.log(`\n========================= >>>\n`)
     returnRemove();
 }
 
@@ -453,7 +455,7 @@ const removeDept  = async () => {
     const deptTable = await query.showDept();
 
     console.table(deptTable);
-    console.log(`\n=============================\n`)
+    console.log(`\n========================= >>>\n`)
     returnRemove();
 }
 

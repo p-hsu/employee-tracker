@@ -64,10 +64,12 @@ The following lists all functions within this project:
 2. Open Terminal (MacOS) or Git Bash (Windows) and change location to where you want the cloned directory
 3. Type `git clone` and paste copied respository
 4. Directory should include the following:
-![Directory Structure:](./assets/images/dir-struc.png)
-5. ***IMPORTANT*** >>>
+
+![Directory Structure:](./assets/images/directory-structure.png)
+
+***5. IMPORTANT >>>
     - rename `.env.EXAMPLE` to `.env`
-    - change "//YOUR SQL PASSWORD HERE//" to your own sql password
+    - change "//YOUR SQL PASSWORD HERE//" to your own sql password***
 
 ## Usage
 
